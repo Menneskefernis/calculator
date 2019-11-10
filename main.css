@@ -69,19 +69,24 @@ section#calc-top button {
     background-color: rgb(247, 140, 140)
 }
 
-input#display {
+div#display {
     margin: 0 5px;
     padding: 10px;
-    height: 40px;
+    height: 60px;
     outline: none;
     border-radius: 6px;
+    text-align: right;
     border: 1px #d3d3d3 solid;
     transition: all 0.3s
 }
 
-input#display:focus {
-    transform: scale(1.01);
-    box-shadow: 0 0 7px;
+div#expression {
+    font-size: 12px;
+}
+
+div#input {
+    margin-top: 10px;
+    font-weight: bold;
 }
 
 section#calc-main {
@@ -103,6 +108,5 @@ button.btn-operator {
 }
 
 button#equals {
-    grid-column: 2 / span 2;
     background-color: #67e667;
 }

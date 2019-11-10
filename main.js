@@ -1,11 +1,16 @@
 const numberButtons = document.querySelectorAll('.btn-num');
 const operatorButtons = document.querySelectorAll('.btn-operator');
 const equals = document.getElementById('equals');
-const display = document.getElementById('display');
+const deleteButton = document.getElementById('delete');
+const clearButton = document.getElementById('clear');
+const inputDisplay = document.getElementById('input');
+const expressionDisplay = document.getElementById('expression');
 
-let currentDisplayValue = '';
-let oldDisplayValue;
+let currentValue = [];
+let oldValue;
 let operator;
+let expression = '';
+let lastResult = false;
 
 function add(a, b){
     return a + b;
@@ -27,23 +32,75 @@ function operate(operator, a, b) {
     return operator(a, b);
 }
 
-function displayNumber() {
+function addToValue() {
+    if (lastResult) return;
+    if (currentValue[currentValue.length - 2] === '.') return;
+
+    currentValue.push(this.name);
+    displayValue();
     
-    currentDisplayValue += this.name;
-    display.value = currentDisplayValue;
+    addToExpression(this.name);
+}
+
+function addToExpression(value) {
+    expression += value;
+}
+
+function removeFromValue() {
+    currentValue.pop();
+    displayValue();
+}
+
+function clear() {
+    currentValue = [];
+    expression = '';
+    displayValue();
+    displayExpression();
+}
+
+function displayValue() {
+    inputDisplay.innerHTML = currentValue.join('');
+}
+
+function displayExpression() {
+    expressionDisplay.innerHTML = expression;
 }
 
 function setOperator() {
-    oldDisplayValue = currentDisplayValue;
-    currentDisplayValue = '';
+
     operator = Function('"use strict";return (' + this.name + ')')();
+    addToExpression(this.name
+                        .replace('multiply', ' * ')
+                        .replace('divide', ' / ')
+                        .replace('add', ' + ')
+                        .replace('subtract', ' - '));
+
+    oldValue = currentValue.join('');
+    currentValue = [];
+    displayExpression();
+    displayValue();
+    
+    lastResult = false;
 }
 
 function calculate() {
-    display.value = operate(operator, +oldDisplayValue, +currentDisplayValue);
-    currentDisplayValue = display.value;
+    
+    let result = operate(operator, +oldValue, +currentValue.join(''));
+    result = Math.round(result * 100000000) / 100000000;
+
+    currentValue[0] = result;
+    
+    lastResult = true;
+    
+    expression = result;
+    displayValue();
+
+    expressionDisplay.innerHTML = '';
+
 }
 
-numberButtons.forEach(button => button.addEventListener('click', displayNumber));
+numberButtons.forEach(button => button.addEventListener('click', addToValue));
 operatorButtons.forEach(button => button.addEventListener('click', setOperator));
+deleteButton.addEventListener('click', removeFromValue);
+clearButton.addEventListener('click', clear);
 equals.addEventListener('click', calculate);
