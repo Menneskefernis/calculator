@@ -56,6 +56,7 @@ function clear() {
     expression = '';
     displayValue();
     displayExpression();
+    lastResult = false;
 }
 
 function displayValue() {
@@ -105,3 +106,24 @@ operatorButtons.forEach(button => button.addEventListener('click', setOperator))
 deleteButton.addEventListener('click', removeFromValue);
 clearButton.addEventListener('click', clear);
 equals.addEventListener('click', calculate);
+
+function setNumberBtnColor() {
+    
+    const nrButtons = Array.from(numberButtons);
+
+    nrButtons.forEach((button) => {
+        if (button.name !== '.') {
+            button.style.backgroundImage = `linear-gradient(to bottom right, ${getRandomColor()}, ${getRandomColor()}`;
+        }
+    });
+}
+
+function getRandomColor() {
+    const r = Math.floor(Math.random() * 256);
+    const g = Math.floor(Math.random() * 256);
+    const b = Math.floor(Math.random() * 256);
+
+    return `rgb(${r}, ${g}, ${b})`;
+}
+
+console.log(setNumberBtnColor());
