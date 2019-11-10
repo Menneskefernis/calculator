@@ -88,6 +88,7 @@ function calculate() {
     let result = operate(operator, +oldValue, +currentValue.join(''));
     result = Math.round(result * 100000000) / 100000000;
 
+    currentValue = [];
     currentValue[0] = result;
     
     lastResult = true;
