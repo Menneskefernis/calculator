@@ -73,9 +73,7 @@ section#calc-top {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     grid-template-rows: repeat(2, 1fr);
-    align-items: center;
-    grid-template-columns: 70px auto 70px;
-    
+    align-items: center;    
 }
 
 section#calc-top button {
@@ -101,6 +99,11 @@ div#display {
 
 button#clear {
  grid-column: 1 / span 1;
+}
+
+button#shuffle {
+    grid-column: 2 / span 2;
+    width: 100%;
 }
 
 button#delete {

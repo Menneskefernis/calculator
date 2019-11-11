@@ -4,6 +4,7 @@ const clearButton = document.getElementById('clear');
 const equals = document.getElementById('equals');
 const inputDisplay = document.getElementById('input');
 const expressionDisplay = document.getElementById('expression');
+const shuffleButton = document.getElementById('shuffle');
 
 let expressionString = [];
 let number = '';
@@ -218,6 +219,7 @@ equals.addEventListener('click', () => {
 });
 
 clearButton.addEventListener('click', clear);
+shuffleButton.addEventListener('click', setNumberBtnColor);
 
 window.addEventListener('keydown', keyboardSupport);
 
