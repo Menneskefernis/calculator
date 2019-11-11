@@ -55,7 +55,7 @@ body {
 }
 
 main {
-    background-image: linear-gradient(to top left, grey, darkgrey);
+    background-image: linear-gradient(to bottom right, grey, darkgrey);
     padding: 20px;
     border-radius: 8px;
     border-top: 1px rgb(95, 95, 95) solid;
@@ -64,36 +64,48 @@ main {
     border-bottom: 7px rgb(95, 95, 95) solid;
 }
 
-h1 {
-    margin: 50px 0;
-    font-size: 40px;
-    color: rgb(255, 255, 255);
+main {
+    margin: 100px 0;
 }
 
 section#calc-top {
-    margin-bottom: 30px;
+    margin-bottom: 20px;
     display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(2, 1fr);
     align-items: center;
     grid-template-columns: 70px auto 70px;
+    
 }
 
 section#calc-top button {
     font-weight: bold;
     background-color: rgb(228, 224, 224);
-    height: 40px;
+    height: 35px;
     border: none;
 }
 
 div#display {
-    margin: 0 10px;
     padding: 10px;
-    height: 60px;
+    height: 70px;
+    width: 100%;
     outline: none;
     border-radius: 6px;
     text-align: right;
-    /*border: 1px #d3d3d3 solid;*/
     transition: all 0.3s;
-    box-shadow: 0 0 5px inset;
+    box-shadow: 0 0 5px 1px inset;
+    background-color: rgb(228, 224, 224);
+    overflow: hidden;
+    grid-column: 1 / span 4;
+}
+
+button#clear {
+ grid-column: 1 / span 1;
+}
+
+button#delete {
+    grid-column: 4 / span 1;
+    justify-self: right;
 }
 
 div#expression {
@@ -101,8 +113,9 @@ div#expression {
 }
 
 div#input {
-    margin-top: 10px;
+    margin-top: 16px;
     font-weight: bold;
+    font-size: 24px;
 }
 
 section#calc-main {

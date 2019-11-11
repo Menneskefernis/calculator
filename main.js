@@ -1,15 +1,13 @@
-const numberButtons = document.querySelectorAll('.btn-num');
-const operatorButtons = document.querySelectorAll('.btn-operator');
-const equals = document.getElementById('equals');
+const calcButtons = document.querySelectorAll('.btn-calc');
 const deleteButton = document.getElementById('delete');
 const clearButton = document.getElementById('clear');
+const equals = document.getElementById('equals');
 const inputDisplay = document.getElementById('input');
 const expressionDisplay = document.getElementById('expression');
 
-let currentValue = [];
-let oldValue;
-let operator;
-let expression = '';
+let expressionString = [];
+let number = '';
+let oldDisplayValue = '';
 let lastResult = false;
 
 function add(a, b){
@@ -32,93 +30,163 @@ function operate(operator, a, b) {
     return operator(a, b);
 }
 
-function addToValue() {
-    if (lastResult) return;
-    if (currentValue[currentValue.length - 2] === '.') return;
+function updateDisplay() {
+    inputDisplay.textContent = replaceOperatorsInString(expressionString.join(''));
+                        
+}
 
-    currentValue.push(this.name);
-    displayValue();
+function replaceOperatorsInString(string) {
+    return string
+        .replace(/add/g, ' + ')
+        .replace(/subtract/g, ' - ')
+        .replace(/multiply/g, ' * ')
+        .replace(/divide/g, ' / ');
+}
+
+function addToExpression(button) {
+    if (!button) return;
+    // if (expressionString.length > 5) return;
+    if (expressionString[expressionString.length - 2] === '.' && button.name === '.') return;
+    if (button.name === '.' && lastResult) return;
+
+    expressionDisplay.textContent = '';
+
+    if (
+        expressionString[expressionString.length - 1] === 'divide' &&
+        button.name === '0'
+        ) {
+        expressionDisplay.textContent = 'No can do!';
+        return;
+    }
     
-    addToExpression(this.name);
+    if (
+        !button.name.match(/[0-9]/) &&
+        expressionString.length > 0 &&
+        expressionString[expressionString.length - 1].match(/[0-9]/)
+        ) {
+            expressionString.push(button.name);
+            lastResult = false;
+    }
+
+    if (
+        button.name.match(/[0-9]/) &&
+        expressionString[expressionString.length - 2] !== '.'
+        ) {
+            expressionString.push(button.name);
+    }
 }
 
-function addToExpression(value) {
-    expression += value;
-}
-
-function removeFromValue() {
-    currentValue.pop();
-    displayValue();
+function deleteFromExpression() {
+    expressionString.pop();
 }
 
 function clear() {
-    currentValue = [];
-    expression = '';
-    displayValue();
-    displayExpression();
+    expressionString = [];
+    updateDisplay();
+    expressionDisplay.textContent = '';
     lastResult = false;
 }
 
-function displayValue() {
-    inputDisplay.innerHTML = currentValue.join('');
+function condenseExpression() {
+    const condensedExp = [];
+    let number = '';
+
+    for (let i = 0; i < expressionString.length; i++) {
+        
+        
+        if (!expressionString[i].match(/[0-9\.]/)) {
+            condensedExp.push(number);
+            condensedExp.push(expressionString[i]);
+            number = '';
+            continue;
+        }
+        number += expressionString[i];
+    }
+    condensedExp.push(number);
+    return condensedExp;
 }
 
-function displayExpression() {
-    expressionDisplay.innerHTML = expression;
+function evaluate() {
+
+    let condensedExp = condenseExpression();
+
+    if (expressionString.includes('multiply')) {
+        calcPart(condensedExp, 'multiply');
+    }
+
+    if (expressionString.includes('divide')) {
+        calcPart(condensedExp, 'divide');
+    }
+
+    if (expressionString.includes('add')) {
+        calcPart(condensedExp, 'add');
+    }
+
+    if (expressionString.includes('subtract')) {
+        calcPart(condensedExp, 'subtract');
+    }
+    
+    const result = Math.round(condensedExp * 100000000) / 100000000;
+
+    if (!expressionString[expressionString.length - 1].match(/[0-9]/)) {
+        expressionString.splice(-1, 1);
+    }
+    expressionDisplay.textContent = replaceOperatorsInString(expressionString.join('')) + ' =';
+    expressionString = [result.toString()];
+    lastResult = true;    
 }
 
-function setOperator() {
-
-    operator = Function('"use strict";return (' + this.name + ')')();
-    addToExpression(this.name
-                        .replace('multiply', ' * ')
-                        .replace('divide', ' / ')
-                        .replace('add', ' + ')
-                        .replace('subtract', ' - '));
-
-    oldValue = currentValue.join('');
-    currentValue = [];
-    displayExpression();
-    displayValue();
+function calcPart(expression, operator) {
     
-    lastResult = false;
+    for (let i = expression.length; i > 0; i--) {
+        if (expression[i] === `${operator}`) {
+            const partResult = operate(window[operator], +expression[i - 1], +expression[i + 1]);
+            expression.splice(i - 1, 3, partResult);
+        }
+    }
+    return expression;
 }
 
-function calculate() {
-    
-    let result = operate(operator, +oldValue, +currentValue.join(''));
-    result = Math.round(result * 100000000) / 100000000;
+function keyboardSupport(e) {
 
-    currentValue = [];
-    currentValue[0] = result;
+    if (e.keyCode.toString() === '8') {
+        deleteFromExpression();
+        updateDisplay();
+        return;
+    }
     
-    lastResult = true;
-    
-    expression = result;
-    displayValue();
+    if (e.keyCode.toString() === '13') {
+        evaluate();
+        updateDisplay();
+        return;
+    }
 
-    expressionDisplay.innerHTML = '';
+    if (e.keyCode.toString() === '27') {
+        clear();
+        updateDisplay();
+        return;
+    }
 
+    const button = Array.from(calcButtons).find(button => button.dataset.value === e.keyCode.toString());
+
+    addToExpression(button);
+    updateDisplay();
 }
-
-numberButtons.forEach(button => button.addEventListener('click', addToValue));
-operatorButtons.forEach(button => button.addEventListener('click', setOperator));
-deleteButton.addEventListener('click', removeFromValue);
-clearButton.addEventListener('click', clear);
-equals.addEventListener('click', calculate);
 
 function setNumberBtnColor() {
-    
-    const nrButtons = Array.from(numberButtons);
+    const nrButtons = Array.from(calcButtons);
 
     nrButtons.forEach((button) => {
-        if (button.name !== '.') {
-            button.style.backgroundImage = `linear-gradient(to bottom right, ${getRandomColor()}, ${getRandomColor()}`;
+        if (button.name.match(/[0-9]/)) {
+            button.style.backgroundImage = `linear-gradient(to bottom right,
+                                                ${getRandomColorHSL()},
+                                                ${getRandomColorHSL()}`;
         }
     });
 }
 
-function getRandomColor() {
+function getRandomColorRGB() {
+
     const r = Math.floor(Math.random() * 256);
     const g = Math.floor(Math.random() * 256);
     const b = Math.floor(Math.random() * 256);
@@ -126,4 +194,31 @@ function getRandomColor() {
     return `rgb(${r}, ${g}, ${b})`;
 }
 
-console.log(setNumberBtnColor());
+function getRandomColorHSL() {
+    const h = Math.floor(Math.random() * 256);
+    const s = Math.floor(Math.random() * 101);
+    const l = Math.floor(Math.random() * (80 - 25 + 1) + 25);
+
+    return `hsl(${h}, ${s}%, ${l}%)`;
+}
+
+calcButtons.forEach(button => button.addEventListener('click', (e) => {
+    addToExpression(e.target);
+    updateDisplay();
+}));
+
+deleteButton.addEventListener('click', () => {
+    deleteFromExpression();
+    updateDisplay();
+});
+
+equals.addEventListener('click', () => {
+    evaluate();
+    updateDisplay();
+});
+
+clearButton.addEventListener('click', clear);
+
+window.addEventListener('keydown', keyboardSupport);
+
+window.onload = setNumberBtnColor();

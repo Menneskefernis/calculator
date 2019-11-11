@@ -12,35 +12,34 @@
     <h1>Calculator</h1>
     <main>
         
-            <section id="calc-top">
-                <button id="clear" class="btn">C</button>
-                <div id="display" name="display">
-                    <div id="expression"></div>
-                    <div id="input"></div>
-                </div>
-                
-                <!-- <input type="text"  autofocus> -->
-                <button id="delete" class="btn btn-delete">< Del</button>
-            </section>
+        <section id="calc-top">
             
-            <section id="calc-main">
-                <button class="btn btn-num" name="1">1</button>
-                <button class="btn btn-num" name="2">2</button>
-                <button class="btn btn-num" name="3">3</button>
-                <button class="btn btn-operator" name="divide">/</button>
-                <button class="btn btn-num" name="4">4</button>
-                <button class="btn btn-num" name="5">5</button>
-                <button class="btn btn-num" name="6">6</button>
-                <button class="btn btn-operator" name="multiply">*</button>
-                <button class="btn btn-num" name="7">7</button>
-                <button class="btn btn-num" name="8">8</button>
-                <button class="btn btn-num" name="9">9</button>
-                <button class="btn btn-operator" name="add">+</button>
-                <button class="btn btn-num" name="0">0</button>
-                <button class="btn btn-num" name=".">.</button>
-                <button id="equals" class="btn" name="equals">=</button>
-                <button class="btn btn-operator" name="subtract">-</button>
-            </section>
+            <div id="display" name="display">
+                <div id="expression"></div>
+                <div id="input"></div>
+            </div>
+            <button id="clear" class="btn">C</button>
+            <button id="delete" class="btn btn-delete">< Del</button>
+        </section>
+            
+        <section id="calc-main">
+            <button class="btn btn-calc btn-num" name="1" data-value="97">1</button>
+            <button class="btn btn-calc btn-num" name="2" data-value="98">2</button>
+            <button class="btn btn-calc btn-num" name="3" data-value="99">3</button>
+            <button class="btn btn-calc btn-operator" name="divide" data-value="111">/</button>
+            <button class="btn btn-calc btn-num" name="4" data-value="100">4</button>
+            <button class="btn btn-calc btn-num" name="5" data-value="101">5</button>
+            <button class="btn btn-calc btn-num" name="6" data-value="102">6</button>
+            <button class="btn btn-calc btn-operator" name="multiply" data-value="106">*</button>
+            <button class="btn btn-calc btn-num" name="7" data-value="103">7</button>
+            <button class="btn btn-calc btn-num" name="8" data-value="104">8</button>
+            <button class="btn btn-calc btn-num" name="9" data-value="105">9</button>
+            <button class="btn btn-calc btn-operator" name="add" data-value="107">+</button>
+            <button class="btn btn-calc btn-num" name="0" data-value="96">0</button>
+            <button class="btn btn-calc btn-num" name="." data-value="110">.</button>
+            <button id="equals" class="btn" data-value="13">=</button>
+            <button class="btn btn-calc btn-operator" name="subtract" data-value="109">-</button>
+        </section>
         
     </main>
 
